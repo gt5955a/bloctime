@@ -1,5 +1,6 @@
 var workSession = 1500;
-var breakSession = 300;
+var shortBreak = 300;
+var longBreak = 1500;
 
 angular.module('blocTimeModule', ['ui.router'])
 
@@ -15,35 +16,36 @@ angular.module('blocTimeModule', ['ui.router'])
   });
 })
 
-/* .constant('sessions', {
-  'WORK_SESSION': 1500,
-  'BREAK_SESSION': 300
-}) */
-
 .controller('TimerCtrl', ['$log', '$scope', '$interval', function($log, $scope, $interval){
   $log.debug('TimerCtrl');
 
   $scope.counter = workSession;
   $scope.isWorking = false;
   $scope.onBreak = false;
-  var newSession;
+  var currentSession;
+  var numSession = 0;
 
   $scope.startTimer = function(){
     $scope.isWorking = true;
 
-    newSession = $interval(function(){
+    currentSession = $interval(function(){
       $scope.counter--;
       if ($scope.counter == 0){
-        $interval.cancel(newSession);
+        $interval.cancel(currentSession);
         $scope.isWorking = false;
 
         if (!$scope.onBreak) {
+          numSession++;
+          console.log(numSession);
           $scope.onBreak = true;
-          /* $scope.onBreak = constant.BREAK_SESSION */
-          $scope.counter = breakSession;
+
+          if (numSession % 4 === 0){
+            $scope.counter = longBreak;
+          } else {
+            $scope.counter = shortBreak;
+          }
         } else {
           $scope.onBreak = false;
-          /* $scope.isWorking = constant.WORK_SESSION; */
           $scope.counter = workSession;
         }
       }
@@ -51,8 +53,7 @@ angular.module('blocTimeModule', ['ui.router'])
   };
 
   $scope.resetTimer = function(){
-    $interval.cancel(newSession);
-    /* $scope.isWorking = constant.WORK_SESSION; */
+    $interval.cancel(currentSession);
     $scope.counter = workSession;
     $scope.isWorking = false;
   }
