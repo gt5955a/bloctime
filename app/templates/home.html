@@ -1,7 +1,8 @@
 <section>
   <div ng-controller="TimerCtrl" class="timer">
     <h1 ng-bind="counter | timeCode"></h1>
-    <button ng-show="!isTimerRunning" ng-click="startTimer()">START</button>
-    <button ng-show="isTimerRunning" ng-click="stopTimer()">STOP</button>
+    <button ng-show="!isWorking && !onBreak" ng-click="startTimer()">START WORK</button>
+    <button ng-show="isWorking" ng-click="resetTimer()">RESET</button>
+    <button ng-show="onBreak && !isWorking" ng-click="startTimer()">START BREAK</button>
   </div>
 </section>

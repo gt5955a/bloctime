@@ -1,6 +1,9 @@
-var blocTimeModule = angular.module('blocTimeModule', ['ui.router']);
+var workSession = 1500;
+var breakSession = 300;
 
-blocTimeModule.config(function($stateProvider, $locationProvider){
+angular.module('blocTimeModule', ['ui.router'])
+
+.config(function($stateProvider, $locationProvider){
   $locationProvider.html5Mode({
     enabled: true,
     requireBase: false
@@ -10,41 +13,57 @@ blocTimeModule.config(function($stateProvider, $locationProvider){
     url: '/',
     templateUrl: '/templates/home.html'
   });
-});
+})
 
-blocTimeModule.controller('TimerCtrl', ['$log', '$scope', '$interval', function($log, $scope, $interval){
+/* .constant('sessions', {
+  'WORK_SESSION': 1500,
+  'BREAK_SESSION': 300
+}) */
+
+.controller('TimerCtrl', ['$log', '$scope', '$interval', function($log, $scope, $interval){
   $log.debug('TimerCtrl');
 
-  $scope.counter = 1500;
-  var stop;
-  var isTimerRunning = false;
+  $scope.counter = workSession;
+  $scope.isWorking = false;
+  $scope.onBreak = false;
+  var newSession;
 
   $scope.startTimer = function(){
-    this.isTimerRunning = true;
-    stop = $interval(function(){
+    $scope.isWorking = true;
+
+    newSession = $interval(function(){
       $scope.counter--;
-      if($scope.counter == 0){
-        $interval.cancel(stop);
-        $scope.counter = 1500;
+      if ($scope.counter == 0){
+        $interval.cancel(newSession);
+        $scope.isWorking = false;
+
+        if (!$scope.onBreak) {
+          $scope.onBreak = true;
+          /* $scope.onBreak = constant.BREAK_SESSION */
+          $scope.counter = breakSession;
+        } else {
+          $scope.onBreak = false;
+          /* $scope.isWorking = constant.WORK_SESSION; */
+          $scope.counter = workSession;
+        }
       }
     }, 1000);
   };
 
-  $scope.stopTimer = function(){
-    $interval.cancel(stop);
-    $scope.counter = 1500;
-    this.isTimerRunning = false;
+  $scope.resetTimer = function(){
+    $interval.cancel(newSession);
+    /* $scope.isWorking = constant.WORK_SESSION; */
+    $scope.counter = workSession;
+    $scope.isWorking = false;
   }
-}]);
+}])
 
-blocTimeModule.filter('timeCode', function(){
+.filter('timeCode', function(){
   return function(seconds){
     var seconds = Number.parseFloat(seconds);
-
     var wholeSeconds = Math.floor(seconds);
     var minutes = Math.floor(wholeSeconds / 60);
     var remainingSeconds = wholeSeconds % 60;
-
     var output = minutes + ':';
 
     if (remainingSeconds < 10){
