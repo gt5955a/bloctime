@@ -1,6 +1,10 @@
-var workSession = 1500;
-var shortBreak = 300;
-var longBreak = 1500;
+var workSession = 60;
+var shortBreak = 60;
+var longBreak = 60;
+
+var beepSound = new buzz.sound('/assets/sounds/beep.mp3', {
+  preload: true
+})
 
 angular.module('blocTimeModule', ['ui.router'])
 
@@ -32,6 +36,7 @@ angular.module('blocTimeModule', ['ui.router'])
       $scope.counter--;
       if ($scope.counter == 0){
         $interval.cancel(currentSession);
+        beepSound.play();
         $scope.isWorking = false;
 
         if (!$scope.onBreak) {
@@ -41,15 +46,18 @@ angular.module('blocTimeModule', ['ui.router'])
 
           if (numSession % 4 === 0){
             $scope.counter = longBreak;
+            beepSound.play();
           } else {
             $scope.counter = shortBreak;
+            beepSound.play();
           }
         } else {
           $scope.onBreak = false;
           $scope.counter = workSession;
+          beepSound.play();
         }
       }
-    }, 1000);
+    }, 60);
   };
 
   $scope.resetTimer = function(){
