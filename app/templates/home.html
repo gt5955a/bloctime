@@ -1,3 +1,16 @@
+<center><h1>Bloc Time</h1></center>
+
+<section>
+  <div ng-controller="TasksCtrl" class="tasks">
+    <h2>Task History</h2>
+    <input type="text" ng-model="task">
+    <button type="button" class="btn btn-primary" ng-click="addTask()">Add Task</button>
+    <div ng-repeat="task in tasks">
+      <p>&#10003; {{ task.task }} Completed on: {{ task.completed }}</p>
+    </div>
+  </div>
+</section>
+
 <section>
   <div ng-controller="TimerCtrl" class="timer">
     <h1 ng-bind="counter | timeCode"></h1>

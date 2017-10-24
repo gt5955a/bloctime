@@ -1,12 +1,12 @@
-var workSession = 60;
-var shortBreak = 60;
-var longBreak = 60;
+var workSession = 1500;
+var shortBreak = 300;
+var longBreak = 1500;
 
 var beepSound = new buzz.sound('/assets/sounds/beep.mp3', {
   preload: true
 })
 
-angular.module('blocTimeModule', ['ui.router'])
+angular.module('blocTimeModule', ['ui.router', 'firebase', 'ui.bootstrap'])
 
 .config(function($stateProvider, $locationProvider){
   $locationProvider.html5Mode({
@@ -36,8 +36,8 @@ angular.module('blocTimeModule', ['ui.router'])
       $scope.counter--;
       if ($scope.counter == 0){
         $interval.cancel(currentSession);
-        beepSound.play();
         $scope.isWorking = false;
+        beepSound.play();
 
         if (!$scope.onBreak) {
           numSession++;
@@ -46,18 +46,15 @@ angular.module('blocTimeModule', ['ui.router'])
 
           if (numSession % 4 === 0){
             $scope.counter = longBreak;
-            beepSound.play();
           } else {
             $scope.counter = shortBreak;
-            beepSound.play();
           }
         } else {
           $scope.onBreak = false;
           $scope.counter = workSession;
-          beepSound.play();
         }
       }
-    }, 60);
+    }, 1000);
   };
 
   $scope.resetTimer = function(){
@@ -65,6 +62,29 @@ angular.module('blocTimeModule', ['ui.router'])
     $scope.counter = workSession;
     $scope.isWorking = false;
   }
+}])
+
+.controller('TasksCtrl', ['$log', '$scope', 'Tasks', function($log, $scope, Tasks){
+  $log.debug('TasksCtrl');
+
+  $scope.tasks = Tasks.all;
+  var currentDate = new Date().toString();
+
+  $scope.addTask = function(){
+    $scope.tasks.$add({
+      task: $scope.task,
+      completed: currentDate
+    });
+  };
+}])
+
+.factory('Tasks', ['$firebaseArray', function($firebaseArray){
+  var ref = new Firebase('https://bloc-time-5622b.firebaseio.com');
+  var tasks = $firebaseArray(ref);
+
+  return {
+    all: tasks
+  };
 }])
 
 .filter('timeCode', function(){
