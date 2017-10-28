@@ -5,7 +5,7 @@
     <h2>Task History</h2>
     <input type="text" ng-model="task">
     <button type="button" class="btn btn-primary" ng-click="addTask()">Add Task</button>
-    <div ng-repeat="task in tasks">
+    <div ng-repeat="task in tasks | orderBy:'-completed'">
       <p>&#10003; {{ task.task }} Completed on: {{ task.completed }}</p>
     </div>
   </div>
