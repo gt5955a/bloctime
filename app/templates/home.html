@@ -1,21 +1,21 @@
-<center><h1>Bloc Time</h1></center>
+<header><h1>Bloc Time</h1></header>
 
-<section>
-  <div ng-controller="TasksCtrl" class="tasks">
-    <h2>Task History</h2>
-    <input type="text" ng-model="task">
-    <button type="button" class="btn btn-primary" ng-click="addTask()">Add Task</button>
-    <div ng-repeat="task in tasks | orderBy:'-completed'">
-      <p>&#10003; {{ task.task }} Completed on: {{ task.completed }}</p>
+<div class="container">
+  <div class="row">
+    <div ng-controller="TasksCtrl" class="tasks" style="margin-left:2%">
+      <h3>Task History</h3>
+      <input type="text" ng-model="task">
+      <button type="button" class="btn btn-primary" ng-click="addTask()">Add Task</button>
+      <div ng-repeat="task in tasks | orderBy:'-completed'">
+        <p>&#10003; {{ task.task }}</p>
+      </div>
+    </div>
+
+    <div ng-controller="TimerCtrl" class="timer" style="margin-right:2%">
+      <h1 ng-bind="counter | timeCode"></h1>
+      <button ng-show="!isWorking && !onBreak" ng-click="startTimer()">START WORK</button>
+      <button ng-show="isWorking" ng-click="resetTimer()">RESET</button>
+      <button ng-show="onBreak && !isWorking" ng-click="startTimer()">START BREAK</button>
     </div>
   </div>
-</section>
-
-<section>
-  <div ng-controller="TimerCtrl" class="timer">
-    <h1 ng-bind="counter | timeCode"></h1>
-    <button ng-show="!isWorking && !onBreak" ng-click="startTimer()">START WORK</button>
-    <button ng-show="isWorking" ng-click="resetTimer()">RESET</button>
-    <button ng-show="onBreak && !isWorking" ng-click="startTimer()">START BREAK</button>
-  </div>
-</section>
+</div>
