@@ -1,21 +1,34 @@
-<header><h1>Bloc Time</h1></header>
-
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div ng-controller="TasksCtrl" class="tasks" style="margin-left:2%">
-      <h3>Task History</h3>
-      <input type="text" ng-model="task">
-      <button type="button" class="btn btn-primary" ng-click="addTask()">Add Task</button>
-      <div ng-repeat="task in tasks | orderBy:'-completed'">
-        <p>&#10003; {{ task.task }}</p>
+    <div class="col-xs-3 sidebar">
+      <div ng-controller="TasksCtrl" class="tasks">
+        <h1>Bloc Time</h1>
+        <br>
+        <h4>Task History</h4>
+          <div class="form-group">
+            <input type="text" ng-model="task" class="form-control" placeholder="Enter new task"></input>
+          </div>
+            <button type="button" class="btn btn-primary pull-right" ng-click="addTask()">ADD TASK</button>
+        <br>
+        <br>
+        <br>
+        <table class="table table-striped">
+          <tr ng-repeat="task in tasks | orderBy:'-completed'">
+            <td>{{ task.task }}
+              <a class="btn btn-info pull-right btn-xs" href="#" role="button" ng-click="tasks.$remove(task)">x</a>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
 
-    <div ng-controller="TimerCtrl" class="timer" style="margin-right:2%">
-      <h1 ng-bind="counter | timeCode"></h1>
-      <button ng-show="!isWorking && !onBreak" ng-click="startTimer()">START WORK</button>
-      <button ng-show="isWorking" ng-click="resetTimer()">RESET</button>
-      <button ng-show="onBreak && !isWorking" ng-click="startTimer()">START BREAK</button>
+    <div class="col-xs-8 app-content">
+      <div ng-controller="TimerCtrl" class="timer">
+        <h1 ng-bind="counter | timeCode"></h1>
+        <button type="button" class="btn btn-primary" ng-show="!isWorking && !onBreak" ng-click="startTimer()">START WORK</button>
+        <button type="button" class="btn btn-primary" ng-show="isWorking" ng-click="resetTimer()">RESET</button>
+        <button type="button" class="btn btn-primary" ng-show="onBreak && !isWorking" ng-click="startTimer()">START BREAK</button>
+      </div>
     </div>
   </div>
 </div>
